@@ -1609,7 +1609,7 @@
         function initializeAccessCodes() {
             if (!database) return;
             
-            database.ref('accessCodes').once('value', snapshot => {
+            database.ref('accessCodes_division').once('value', snapshot => {
                 if (!snapshot.exists()) {
                     // 기본 코드 설정
                     const defaultCodes = {
@@ -1622,7 +1622,7 @@
                         class7: '7777',
                         class8: '8888'
                     };
-                    database.ref('accessCodes').set(defaultCodes);
+                    database.ref('accessCodes_division').set(defaultCodes);
                     console.log('기본 접근 코드 설정 완료');
                 }
             });
@@ -1643,7 +1643,7 @@
                 }
             }
             
-            database.ref('accessCodes').update(codes).then(() => {
+            database.ref('accessCodes_division').update(codes).then(() => {
                 alert('접근 코드가 저장되었습니다.');
             }).catch(error => {
                 alert('코드 저장 실패: ' + error.message);
@@ -1654,7 +1654,7 @@
         function loadAccessCodes() {
             if (!database) return;
             
-            database.ref('accessCodes').once('value', snapshot => {
+            database.ref('accessCodes_division').once('value', snapshot => {
                 const codes = snapshot.val() || {};
                 for (let i = 1; i <= 8; i++) {
                     const codeInput = document.getElementById(`code${i}`);
@@ -1674,7 +1674,7 @@
                     return;
                 }
                 
-                database.ref(`accessCodes/class${classNum}`).once('value', snapshot => {
+                database.ref(`accessCodes_division/class${classNum}`).once('value', snapshot => {
                     const correctCode = snapshot.val();
                     if (!correctCode || correctCode === '') {
                         // 코드가 설정되지 않은 경우 통과
@@ -2036,11 +2036,11 @@
                     sessionErrors: gameState.sessionErrors
                 };
                 
-                const userPath = `students/class${gameState.currentClass}/${gameState.currentUser}`;
+                const userPath = `students_division/class${gameState.currentClass}/${gameState.currentUser}`;
                 database.ref(userPath).set(userData);
                 
-                const allStudentsPath = `allStudents/${gameState.currentClass}_${gameState.currentUser}`;
-                database.ref(allStudentsPath).set(userData);
+                const allStudents_divisionPath = `allStudents_division/${gameState.currentClass}_${gameState.currentUser}`;
+                database.ref(allStudents_divisionPath).set(userData);
             } catch (error) {
                 console.error('데이터 저장 오류:', error);
                 gameState.sessionErrors++;
@@ -2050,7 +2050,7 @@
         function loadUserData(className, studentName) {
             if (!database) return Promise.resolve(null);
             
-            return database.ref(`students/class${className}/${studentName}`)
+            return database.ref(`students_division/class${className}/${studentName}`)
                 .once('value')
                 .then(snapshot => snapshot.val())
                 .catch(error => {
@@ -2069,9 +2069,9 @@
                     timestamp: Date.now()
                 };
                 
-                database.ref('activities').push(activityData);
+                database.ref('activities_division').push(activityData);
                 
-                database.ref('activities').once('value', snapshot => {
+                database.ref('activities_division').once('value', snapshot => {
                     const count = snapshot.numChildren();
                     if (count > 100) {
                         const itemsToRemove = count - 100;
@@ -2096,9 +2096,9 @@
             const confirmMsg = `정말로 ${classNum}반의 모든 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`;
             if (!confirm(confirmMsg)) return;
             
-            database.ref(`students/class${classNum}`).remove();
+            database.ref(`students_division/class${classNum}`).remove();
             
-            database.ref('allStudents').once('value', snapshot => {
+            database.ref('allStudents_division').once('value', snapshot => {
                 snapshot.forEach(child => {
                     const student = child.val();
                     if (student.class == classNum) {
@@ -2107,7 +2107,7 @@
                 });
             });
             
-            database.ref('activities').once('value', snapshot => {
+            database.ref('activities_division').once('value', snapshot => {
                 snapshot.forEach(child => {
                     const activity = child.val();
                     if (activity.class == classNum) {
@@ -2132,9 +2132,9 @@
                 return;
             }
             
-            database.ref('students').remove();
-            database.ref('allStudents').remove();
-            database.ref('activities').remove();
+            database.ref('students_division').remove();
+            database.ref('allStudents_division').remove();
+            database.ref('activities_division').remove();
             
             alert('모든 데이터가 초기화되었습니다.');
             updateMonitor();
@@ -2379,7 +2379,7 @@
             
             stopPublicMonitoring();
             
-            publicMonitoringRef = database.ref('allStudents');
+            publicMonitoringRef = database.ref('allStudents_division');
             publicMonitoringRef.on('value', snapshot => {
                 const students = [];
                 if (snapshot) {
@@ -2636,7 +2636,7 @@
             
             stopRealtimeMonitoring();
             
-            const studentsRef = database.ref('allStudents');
+            const studentsRef = database.ref('allStudents_division');
             studentsRef.on('value', snapshot => {
                 const students = [];
                 snapshot.forEach(child => {
@@ -2646,7 +2646,7 @@
             });
             monitoringRefs.push(studentsRef);
             
-            const activitiesRef = database.ref('activities').limitToLast(50);
+            const activitiesRef = database.ref('activities_division').limitToLast(50);
             activitiesRef.on('value', snapshot => {
                 const activities = [];
                 snapshot.forEach(child => {
