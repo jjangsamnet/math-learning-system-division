@@ -1272,9 +1272,12 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">반 접근 코드</label>
-                    <input type="password" id="classCode" class="form-input" placeholder="접근 코드를 입력하세요" maxlength="6">
+                    <label class="form-label">반 접근 코드 (선택사항)</label>
+                    <input type="password" id="classCode" class="form-input" placeholder="접근 코드를 입력하세요 (없으면 비워두세요)" maxlength="6">
                     <div class="error-message" id="codeError">접근 코드가 올바르지 않습니다.</div>
+                    <div style="margin-top: 5px; color: #718096; font-size: 0.85em;">
+                        💡 팁: Firebase 설정이 완료되지 않았다면 코드 없이 로그인 가능합니다
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -1444,6 +1447,13 @@
             <!-- 접근 코드 관리 -->
             <div class="access-code-panel">
                 <h3>🔑 반별 접근 코드 관리</h3>
+                <div style="margin-bottom: 15px; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+                    <strong style="color: #856404;">⚠️ 저장 실패 시:</strong>
+                    <p style="margin: 5px 0 0 0; color: #856404; font-size: 0.9em;">
+                        "permission_denied" 오류가 발생하면 <strong>Firebase Console</strong>에서 Database 규칙을 수정해야 합니다.<br>
+                        📄 자세한 방법은 <a href="FIREBASE_규칙설정_필수.md" target="_blank" style="color: #007bff; text-decoration: underline;">FIREBASE_규칙설정_필수.md</a> 파일을 참조하세요.
+                    </p>
+                </div>
                 <div class="code-grid">
                     <div class="code-item">
                         <label>1반</label>
